@@ -1,0 +1,38 @@
+services:
+  psql:
+    image: postgres:latest
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_DB: animalCare
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  animalcare:
+    image: aclij/animalcare:0.0.1
+    ports:
+      - "8086:8080"
+    depends_on:
+      - psql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://psql:5432/animalCare
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_DB: adoption
+      MYSQL_ROOT_PASSWORD: root
+  adoption:
+    image: nazar113/adoption:0.1.1
+    ports:
+      - "8085:8080"
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/adoption
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
